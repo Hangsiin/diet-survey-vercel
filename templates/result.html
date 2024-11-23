@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-indigo-900 mb-4">당신의 다이어트 성향 분석 결과</h1>
+            <p class="text-lg text-gray-600">AI가 분석한 당신만의 맞춤형 다이어트 컨설팅 결과입니다</p>
+        </div>
+
+        <!-- Personality Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:scale-[1.02] transition-transform duration-200">
+            <h3 class="text-2xl font-bold text-indigo-900 mb-4" id="personalityTitle"></h3>
+            <p class="text-gray-700 mb-6" id="personalityDescription"></p>
+            <div class="space-y-3" id="personalityTraits">
+                <!-- Traits will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Psychological State Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:scale-[1.02] transition-transform duration-200">
+            <h3 class="text-2xl font-bold text-pink-900 mb-4" id="psychStateTitle"></h3>
+            <p class="text-gray-700 mb-6" id="psychStateDescription"></p>
+            <div class="space-y-3" id="psychStatePoints">
+                <!-- Key points will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Current Status Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:scale-[1.02] transition-transform duration-200">
+            <h3 class="text-2xl font-bold text-emerald-900 mb-4" id="statusTitle"></h3>
+            <p class="text-gray-700 mb-6" id="statusDescription"></p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-xl font-semibold text-emerald-700 mb-4">강점</h4>
+                    <div class="space-y-3" id="statusStrengths">
+                        <!-- Strengths will be inserted here -->
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-emerald-700 mb-4">도전 과제</h4>
+                    <div class="space-y-3" id="statusChallenges">
+                        <!-- Challenges will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Potential Risks Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 transform hover:scale-[1.02] transition-transform duration-200">
+            <h3 class="text-2xl font-bold text-amber-900 mb-4" id="risksTitle"></h3>
+            <p class="text-gray-700 mb-6" id="risksDescription"></p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-xl font-semibold text-amber-700 mb-4">위험 요소</h4>
+                    <div class="space-y-3" id="riskFactors">
+                        <!-- Risk factors will be inserted here -->
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-amber-700 mb-4">추천 사항</h4>
+                    <div class="space-y-3" id="recommendations">
+                        <!-- Recommendations will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Return to Survey Button -->
+        <div class="text-center mt-12">
+            <a href="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                새로운 설문 시작하기
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get result data from server-side template
+    const resultData = {{ analysis_result | safe }};
+
+    // Update personality section
+    document.getElementById('personalityTitle').textContent = resultData.personality.title;
+    document.getElementById('personalityDescription').textContent = resultData.personality.description;
+    document.getElementById('personalityTraits').innerHTML = resultData.personality.traits.map(trait => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-indigo-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-gray-700">${trait}</span>
+        </div>`
+    ).join('');
+
+    // Update psychological state section
+    document.getElementById('psychStateTitle').textContent = resultData.psychological_state.title;
+    document.getElementById('psychStateDescription').textContent = resultData.psychological_state.description;
+    document.getElementById('psychStatePoints').innerHTML = resultData.psychological_state.key_points.map(point => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-pink-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <span class="text-gray-700">${point}</span>
+        </div>`
+    ).join('');
+
+    // Update current status section
+    document.getElementById('statusTitle').textContent = resultData.current_status.title;
+    document.getElementById('statusDescription').textContent = resultData.current_status.description;
+    document.getElementById('statusStrengths').innerHTML = resultData.current_status.strengths.map(strength => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="text-gray-700">${strength}</span>
+        </div>`
+    ).join('');
+    document.getElementById('statusChallenges').innerHTML = resultData.current_status.challenges.map(challenge => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span class="text-gray-700">${challenge}</span>
+        </div>`
+    ).join('');
+
+    // Update potential risks section
+    document.getElementById('risksTitle').textContent = resultData.potential_risks.title;
+    document.getElementById('risksDescription').textContent = resultData.potential_risks.description;
+    document.getElementById('riskFactors').innerHTML = resultData.potential_risks.risk_factors.map(factor => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span class="text-gray-700">${factor}</span>
+        </div>`
+    ).join('');
+    document.getElementById('recommendations').innerHTML = resultData.potential_risks.recommendations.map(rec => 
+        `<div class="flex items-start space-x-3">
+            <svg class="h-6 w-6 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <span class="text-gray-700">${rec}</span>
+        </div>`
+    ).join('');
+});
+</script>
+{% endblock %}

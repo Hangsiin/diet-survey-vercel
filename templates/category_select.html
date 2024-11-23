@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-indigo-900">설문 카테고리 선택</h1>
+            <p class="mt-4 text-gray-600">완료한 카테고리: {{ completed_categories|length }}/3</p>
+        </div>
+
+        <div class="grid gap-6 mb-8">
+            {% for category in [('habits', '식습관 및 활동'), ('ideal_body', '나의 이상적인 몸매'), ('diet_tendency', '나의 다이어트 성향')] %}
+            <div class="bg-white shadow-lg rounded-lg p-6 {% if category[0] in completed_categories %}border-2 border-green-500{% endif %}">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">{{ category[1] }}</h2>
+                        <p class="mt-2 text-gray-600">
+                            {% if category[0] in completed_categories %}
+                            ✓ 완료됨
+                            {% else %}
+                            아직 완료되지 않음
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{{ url_for('survey', category=category[0]) }}"
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white {% if category[0] in completed_categories %}bg-green-600 hover:bg-green-700{% else %}bg-indigo-600 hover:bg-indigo-700{% endif %} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        {% if category[0] in completed_categories %}
+                        다시 하기
+                        {% else %}
+                        시작하기
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if completed_categories|length == 3 %}
+        <div class="text-center">
+            <form action="{{ url_for('analyze_survey') }}" method="POST">
+                <button type="submit"
+                        class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    AI 분석하기
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
